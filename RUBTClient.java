@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
 import java.io.*;
@@ -6,12 +7,17 @@ import java.util.Random;
 import java.util.Map;
 import java.util.ArrayList;
 =======
+=======
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 package RUBTClient;
 
 import java.io.*;
 import java.util.Random;
 import java.util.Map;
+<<<<<<< HEAD
 >>>>>>> 8fa6485982a998eafacd931560b86262d6465df2
+=======
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 
 /**
  * RUBTClient Class
@@ -40,10 +46,14 @@ public class RUBTClient {
 
 	/** Peer Information */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	public static ArrayList<Peer> peer;
 =======
 	public static String[] peer;
 >>>>>>> 8fa6485982a998eafacd931560b86262d6465df2
+=======
+	public static String[] peer;
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 	
 	/** Download Information */
 	public int bytesDownloaded;
@@ -52,15 +62,83 @@ public class RUBTClient {
 	public static String event;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	public static final int blockLength = 16384;  /* 16384 = 2^14*/
 =======
 	public static final int blockLength = 16384;
 >>>>>>> 8fa6485982a998eafacd931560b86262d6465df2
+=======
+	public static final int blockLength = 16384;
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 	public static int numPieces = 0;
 	public static int numBlocks = 0;
 	public static int numBlkPieceRatio = 0;
 	public static int numBlkLastPiece = 0;
+<<<<<<< HEAD
+=======
 	
+	
+
+
+	/* ================================================================================ */
+	/* 								RUBTClient Constructor								*/  
+	/* ================================================================================ */
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
+	
+	RUBTClient(String firstArg, String secondArg){
+		try{
+			/** Extract information as String */
+			torrentName = firstArg;
+			destinationName = secondArg;
+
+			/** Capture torrent File */
+			torrentFile= new File(torrentName);
+
+			/** Parse torrent and return TorrentInfo */
+			torrent = torrent_parser(torrentFile);	
+
+			/** Initialize upload/download/remaining Bytes */
+			bytesDownloaded = 0;
+			bytesUploaded = 0;
+			bytesRemaining = torrent.file_length % blockLength;
+			event = null;
+
+			/** Set number of pieces */
+			if (bytesRemaining == 0){
+				numPieces = torrent.file_length / torrent.piece_length;
+			}
+			else{
+				numPieces = torrent.file_length / torrent.piece_length + 1;
+			}
+			
+			/** Set number of blocks */
+			numBlocks = (int)Math.ceil(torrent.file_length / blockLength);
+			
+			/** Set blocks per piece */
+			numBlkPieceRatio = torrent.piece_length / blockLength;
+			
+			/** Create peerID */
+			peerID = setPeerId();
+
+			/** Initialize BitSet */
+			/** 
+			 * 
+			 */
+		}
+		catch (NullPointerException e){
+			System.err.println("ERROR: Torrent File does not exist.");
+			System.exit(1);
+		}
+		catch (Exception e){
+			System.err.println("ERROR: Unable to initialize Client.");
+			System.exit(1);
+		}
+	}
+
+
+	/* ================================================================================ */
+	/* 									MAIN	  										*/  
+	/* ================================================================================ */
 	
 
 
@@ -138,6 +216,7 @@ public class RUBTClient {
 
 		/** Initialize Client */
 		client = new RUBTClient(args[0], args[1]);
+<<<<<<< HEAD
 <<<<<<< HEAD
 		 
 		/* ================ */
@@ -336,6 +415,24 @@ public class RUBTClient {
 		return randomPeerID;
 =======
 
+=======
+
+		/** Initialize Tracker */
+		tracker = new TrackerGetr(client, torrent);
+
+		/** Connects to tracker */         
+		tracker.connect(0,0,client.bytesRemaining, "started");
+
+		/** Checks if connection was successful */
+		/*
+		if(trackerResponse == null){
+			System.err.println("ERROR: Did not recieve tracker response. ");
+		}
+		*/
+		
+		/** Update peerList ??? */
+
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 		
 		
 		/** Get peerList */
@@ -349,10 +446,14 @@ public class RUBTClient {
 		/** Start ProgramManager ("downloader" application thread) */
 		//blah blah
 		
+<<<<<<< HEAD
 >>>>>>> 8fa6485982a998eafacd931560b86262d6465df2
+=======
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 	}
 
 	
+<<<<<<< HEAD
 <<<<<<< HEAD
 	/* ================================================================================ */
 	/* 									GET-METHODS  									*/  
@@ -380,6 +481,24 @@ public class RUBTClient {
 			return true;
 	}
 
+=======
+	
+
+	/* ================================================================================ */
+	/* 									METHODS  										*/  
+	/* ================================================================================ */
+
+	/** METHOD: Checks number of arguments in command line */
+	public static boolean validateNumArgs(String[] args){
+		if ((args.length != 2)) {
+			System.err.println("ERROR: Invalid number of arguments");
+			return false;
+		}
+		else
+			return true;
+	}
+
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 
 	/** METHOD: Parses Torrent File */
 	public static TorrentInfo torrent_parser(File torrent) {
@@ -480,7 +599,10 @@ public class RUBTClient {
 		return torrent;
 	}
 
+<<<<<<< HEAD
 >>>>>>> 8fa6485982a998eafacd931560b86262d6465df2
+=======
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 	/** Retrieves bytes downloaded */
 	public int getBytesDownloaded(){
 		return bytesDownloaded;
@@ -501,17 +623,21 @@ public class RUBTClient {
 		return event;
 	}
 <<<<<<< HEAD
+<<<<<<< HEAD
         
         public void setEvent(String event){
             this.event= event;
         }
 =======
 >>>>>>> 8fa6485982a998eafacd931560b86262d6465df2
+=======
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 
 	/** Retrieves number of pieces */
 	public int getNumPieces(){
 		return numPieces;
 	}
+<<<<<<< HEAD
 <<<<<<< HEAD
 	
 	/** Retrieves number of blocks */
@@ -530,6 +656,8 @@ public class RUBTClient {
 	}
 =======
 >>>>>>> 8fa6485982a998eafacd931560b86262d6465df2
+=======
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 
 	/** Retrieves peer ID */
 	public String getPeerId(){

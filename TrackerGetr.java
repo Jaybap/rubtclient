@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
 import java.io.*;
@@ -11,6 +12,8 @@ import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 
 =======
+=======
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 package RUBTClient;
 
 import java.net.*;
@@ -18,7 +21,10 @@ import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.io.*;
 import java.util.*;
+<<<<<<< HEAD
 >>>>>>> 8fa6485982a998eafacd931560b86262d6465df2
+=======
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 
 /**
  * TrackerGetr Class
@@ -37,10 +43,14 @@ public class TrackerGetr {
 	public static final char[] HEX_CHARS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 
 		'A', 'B', 'C', 'D', 'E', 'F'};
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 	
 >>>>>>> 8fa6485982a998eafacd931560b86262d6465df2
+=======
+	
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 	/** Torrent Information:  
 	 * infoHash
 	 * announceURL
@@ -49,12 +59,18 @@ public class TrackerGetr {
 	 * piece_hashes */
 	private static TorrentInfo torrentData;
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 	//public byte[] infoHash;
 	//private URL announceURL;
 	
 >>>>>>> 8fa6485982a998eafacd931560b86262d6465df2
+=======
+	//public byte[] infoHash;
+	//private URL announceURL;
+	
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 	/** Client Information: 
 	 * destinationFile,
 	 * bytesDownloaded, 
@@ -63,20 +79,27 @@ public class TrackerGetr {
 	 * event; */
 	private static RUBTClient client;
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
+=======
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 	//public byte[] peerID;
 	//public static int bytesDownloaded;
 	//public static int bytesUploaded;
 	//public static int bytesRemaining;
 	//private String event;
 	
+<<<<<<< HEAD
 >>>>>>> 8fa6485982a998eafacd931560b86262d6465df2
+=======
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 	/** Tracker Information */
 	private static URL trackerUrl;
 	private static String trackerIP;
 	private static int trackerPort;
 	private static int trackerInterval;
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 	/** Connection Information */
@@ -85,13 +108,18 @@ public class TrackerGetr {
 	static int listeningPort = -1;
 
 =======
+=======
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 	
 	/** Connection Information */
 	private static URL requestedURL;
 	private static String[] peerList ; 
 	static int listeningPort = -1;
 	
+<<<<<<< HEAD
 >>>>>>> 8fa6485982a998eafacd931560b86262d6465df2
+=======
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 	/** keyINTERVAL */
 	public static final ByteBuffer keyINTERVAL = ByteBuffer.wrap(new byte[] {
 			'i', 'n', 't', 'e', 'r', 'v', 'a', 'l' });
@@ -100,16 +128,22 @@ public class TrackerGetr {
 	public static final ByteBuffer keyPEERS = ByteBuffer.wrap(new byte[] { 'p',
 			'e', 'e', 'r', 's' });
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
 =======
 	
 	
 >>>>>>> 8fa6485982a998eafacd931560b86262d6465df2
+=======
+	
+	
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 	/* ================================================================================ */
 	/* 								Tracker Constructor									*/  
 	/* ================================================================================ */
 	TrackerGetr(RUBTClient c, TorrentInfo t) {		
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 		/** Fill in Client Information */
@@ -119,6 +153,8 @@ public class TrackerGetr {
 		torrentData = t; 									/* TorrentInfo */
 
 =======
+=======
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 		
 		/** Fill in Client Information */
 		client = c; 										/* RUBTClient */
@@ -126,12 +162,16 @@ public class TrackerGetr {
 		/** Fill in Client Information */
 		torrentData = t; 									/* TorrentInfo */
 		
+<<<<<<< HEAD
 >>>>>>> 8fa6485982a998eafacd931560b86262d6465df2
+=======
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 		/** Fill in Tracker Information */
 		trackerUrl = torrentData.announce_url; 				/* URL */
 		trackerIP = trackerUrl.getHost(); 					/* String */
 		trackerPort = trackerUrl.getPort(); 				/* int */
 	}
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 
@@ -143,6 +183,8 @@ public class TrackerGetr {
         
 	public void connect(int bytesDown, int bytesUp, int bytesRemaining) throws IOException {
 =======
+=======
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 	
 	
 	
@@ -151,12 +193,16 @@ public class TrackerGetr {
 	/* ================================================================================ */
 	
 	public void connect(int bytesDown, int bytesUp, int bytesRemaining, String event) throws IOException {
+<<<<<<< HEAD
 >>>>>>> 8fa6485982a998eafacd931560b86262d6465df2
+=======
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 
 		/** Variables */
 		Socket trkSocket = null;
 		URL trkURL = null;
 		HttpURLConnection trkConnection = null;
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 		DataInputStream trackerData;
@@ -166,6 +212,8 @@ public class TrackerGetr {
 		Map<ByteBuffer, Object> trkMapResponse = null;
 
 =======
+=======
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 		
 		DataInputStream trackerData;
  		int size;
@@ -173,17 +221,24 @@ public class TrackerGetr {
 		byte[] trkDataByteArray = null;
 		Map<ByteBuffer, Object> trkMapResponse = null;
 		
+<<<<<<< HEAD
 >>>>>>> 8fa6485982a998eafacd931560b86262d6465df2
+=======
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 		/** Verify Tracker was initialized */
 		if (trackerUrl == null)
 		{
 			System.err.println("Tracker was not created properly. ");
 		}
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 		
 >>>>>>> 8fa6485982a998eafacd931560b86262d6465df2
+=======
+		
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 		/** Open socket in order to communicate with tracker */
 		try
 		{
@@ -194,10 +249,14 @@ public class TrackerGetr {
 			System.err.println("ERROR: Unable to create socket at " + trackerIP + ":" + trackerPort);
 		}
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 		
 >>>>>>> 8fa6485982a998eafacd931560b86262d6465df2
+=======
+		
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 		/** Create tracker HTTP URL connection */
 		try
 		{
@@ -209,10 +268,14 @@ public class TrackerGetr {
 			System.err.println("ERROR: Unable to create HTTP URL Connection with tracker. ");
 		}
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 		
 >>>>>>> 8fa6485982a998eafacd931560b86262d6465df2
+=======
+		
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 		/** Receiving tracker response */
 		try 
 		{
@@ -226,23 +289,30 @@ public class TrackerGetr {
 			System.err.println("Caught IOException: " + e.getMessage());
 		}
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 		/** Decoding tracker byte Array response to Map  */
 		try
 		{
 			trkMapResponse = (Map<ByteBuffer, Object>)Bencoder2.decode(trkDataByteArray); 
 =======
+=======
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 		
 		/** Decoding tracker byte Array response to Map  */
 		try
 		{
 		trkMapResponse = (Map<ByteBuffer, Object>)Bencoder2.decode(trkDataByteArray); 
+<<<<<<< HEAD
 >>>>>>> 8fa6485982a998eafacd931560b86262d6465df2
+=======
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 		}
 		catch(BencodingException e)
 		{
 			System.err.println("Unable to decode tracker response. ");
 		}
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 		/** Extract and set Info from tracker response */ 
@@ -528,6 +598,106 @@ public class TrackerGetr {
 		return peerURLs.toArray(new String[peerURLs.size()]);
 	}
 
+=======
+		
+		/** Extract and set Info from tracker response */ 
+		setPeerList(trkMapResponse);
+		
+	}
+
+	
+	/** Method: set peer list */
+	public static void setPeerList(Map response){
+		//Currently working on this
+		
+		/* Variables */
+		String[] decodedTrkResponse;
+		
+		/** Decode tracker Map response to String[] */
+		decodedTrkResponse = decodeCompressedPeers(response);
+	}
+	
+	/** Method: Create and return requested URL */
+	public static URL newURL(int bytesDown, int bytesUp, int bytesRemaining, URL announceURL) {
+		/* Variables */
+		String newUrlString = "";
+		
+		/** Find a random port to connect */
+		listeningPort = setPortNum();
+		
+		/** Create requestedURL */
+		newUrlString += trackerUrl 
+		+ "?info_hash=" + toHexString(torrentData.info_hash.array())
+		+ "&peer_id=" + toHexString((client.getPeerId()).getBytes()) 
+		+ "&port=" + listeningPort 
+		+ "&uploaded=" + bytesUp 
+		+ "&downloaded=" + bytesDown 
+		+ "&left=" + bytesRemaining;
+		
+		if ((client.getEvent()) != null) {
+			newUrlString += "&event=" + (client.getEvent());
+		}
+		
+		/** Return requested URL */
+		try 
+		{
+			requestedURL = new URL(newUrlString);
+			return requestedURL;
+		} 
+		catch (MalformedURLException e) 
+		{
+			System.out.println("Unable to create URL");
+			return null;
+		}
+	}
+	
+	
+
+	/** Method: Turn bytes to HexStrings */
+	/* NOTE: NEED TO MODIFY */
+	public static String toHexString(byte[] bytes) {
+		if (bytes == null) {
+			return null;
+		}
+
+		if (bytes.length == 0) {
+			return "";
+		}
+
+		StringBuilder hex = new StringBuilder(bytes.length * 3);
+
+		for (byte b : bytes) {
+			byte hi = (byte) ((b >> 4) & 0x0f);
+			byte lo = (byte) (b & 0x0f);
+
+			hex.append('%').append(HEX_CHARS[hi]).append(HEX_CHARS[lo]);
+		}
+		return hex.toString();
+	}
+	
+	
+	
+	/** Method: Decode Map to String[] */
+	public static String[] decodeCompressedPeers(Map map){
+		ByteBuffer peers = (ByteBuffer) map.get(ByteBuffer.wrap("peers".getBytes()));
+		ArrayList<String> peerURLs = new ArrayList<String>();
+		try {
+			while (true) {
+				String ip = String.format("%d.%d.%d.%d",
+						peers.get() & 0xff,
+						peers.get() & 0xff,
+						peers.get() & 0xff,
+						peers.get() & 0xff);
+				int port = peers.get() * 256 + peers.get();
+				peerURLs.add(ip + ":" + port);
+			}
+		} catch (BufferUnderflowException e) {
+			// done
+		}
+		return peerURLs.toArray(new String[peerURLs.size()]);
+	}
+
+>>>>>>> 140c07d34e60a64ef28943e8dec3871bbbe2c7f0
 	/* ================================================================================ */
 	/* 									SET-METHODS  									*/  
 	/* ================================================================================ */
