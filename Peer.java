@@ -1,47 +1,35 @@
 
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.nio.*;
-import java.nio.ByteBuffer;
-import java.security.MessageDigest;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayDeque;
-import java.util.BitSet;
-import java.util.Date;
-import java.util.Queue;
 
 public class Peer {
-
+  
     /**
-     * It has methods to perform handshake, alive, interested, and other
-     * messages.
+     *It has methods to perform handshake, alive, interested, and other messages.
      */
-    public RUBTClient client;
-    public byte[] info_hash;
+
+	/** Peer Information */
     public String peerID = null;
+    public String peerIP = null;
     public int peerPort = 0;
-    public String peerIP=null;
     public Socket peerSocket = null;
-    public String hostIP = null;
+    
+    
+    /** Connection Information */
     public DataOutputStream client2peer = null;
     public DataInputStream peer2client = null;
+    
+    /** BOOLEAN Connection status */
+    public boolean connected = false;
+    
     public boolean[] booleanBitField = null;
+    
     public boolean peerInterested;
     public boolean peerChoking;
-    public boolean Running;
-    public boolean connected;
-    public Socket peerconnection;
-    public DataOutputStream topeer;
-    
-    
+
     final static int KEY_CHOKE = 0;
     final static int KEY_UNCHOKE = 1;
     final static int KEY_INTERESTED = 2;
@@ -52,8 +40,9 @@ public class Peer {
     final static int KEY_PIECE = 7;
     final static int KEY_CANCEL = 8;
     final static int KEY_PORT = 9;
+    
     /**
-     * Set the byte arrays for the static peer messages
+     * Set the byte arrays for the static peer messages 
      */
     final static byte[] interested = {0, 0, 0, 1, 2};
     final static byte[] uninterested = {0, 0, 0, 1, 3};
@@ -62,77 +51,176 @@ public class Peer {
     final static byte[] empty_bitfield = {0, 0, 0, 2, 5, 0};
     final static byte[] keep_alive = {0, 0, 0, 0};
 
-    public Peer(String peerIdNum, String IpNum, int peerPortNum, ByteBuffer info_hash, RUBTClient client, String peerip) {
-        peerID = peerIdNum;
-        hostIP = IpNum;
-        peerIP= peerip;
-        peerPort = peerPortNum;
-        booleanBitField = new boolean[RUBTClient.numPieces];
-        this.info_hash = info_hash.array();
-        this.client = client;
+    
+    
+    /* ================================================================================ */
+	/* 									Peer Constructor								*/  
+	/* ================================================================================ */    
+    public Peer(String IpNum, int peerPortNum, String cid) {
+        this.peerID = ""; //not provided to us?
+        this.peerIP = IpNum;
+        this.peerPort = peerPortNum;
+        this.booleanBitField = new boolean [RUBTClient.numPieces];
+        
     }
+    
+    /* ================================================================================ */
+	/* 										Methods										*/  
+	/* ================================================================================ */
 
-    public static byte[] getInfoHashFromHandshake(byte[] response) {
-        byte[] info_hash = new byte[20];
-        int index = 28;
-        for (int i = 0; i < 20; ++i) {
-            info_hash[i] = response[index];
-            ++index;
-        }
-        return info_hash;
-    }
-
-    public static int getNextPiece(boolean[] completed) {
-
-        for (int i = 0; i < completed.length; ++i) {
-            if (!completed[i]) {
-                return i;
-            }
-        }
-        return -1; // no more pieces are needed.
-    }
-
-    private ByteBuffer buildHandshake(String localPeerID, ByteBuffer info_hash) {
-        byte[] handshake_bytes = new byte[68];
-        handshake_bytes[0] = (char) 19;
-        try {
-            byte[] ptsr = "BitTorrent protocol".getBytes("ASCII");
-            System.arraycopy(ptsr, 0, handshake_bytes, 1, ptsr.length);
-            Arrays.fill(handshake_bytes, 20, 28, (byte) 0);
-            System.arraycopy(info_hash.array(), 0, handshake_bytes, 28, 20);
-            System.arraycopy(localPeerID.getBytes("ASCII"), 0, handshake_bytes, 48, 20);
-        } catch (UnsupportedEncodingException e) {
+    /** METHOD: Create handshake */
+    public static byte[] buildHandshake(String localPeerID, ByteBuffer infoHash) {
+        /* Variables */
+    	int i = 0;
+    	byte[] handshakeBytes;
+    	
+    	/** Create handshake byte array */
+    	handshakeBytes = new byte[68];
+        
+    	/** Begin byte array with byte "nineteen" */
+    	handshakeBytes[i] = 0x13; //decimal: 19
+        i++;
+        
+        try 
+        {
+        	/** Put "BitTorrent protocol"-byte array */
+        	byte[] btBytes = { 'B', 'i', 't', 'T', 'o', 'r', 'r', 'e', 'n', 't', 
+        			' ', 'p', 'r', 'o', 't', 'o', 'c', 'o', 'l' };
+            System.arraycopy(btBytes, 0, handshakeBytes, i, btBytes.length);
+            i = i + btBytes.length;
+            /** Put zero-byte array */
+            byte[] zeroBytes = new byte[8];
+            System.arraycopy(zeroBytes, 0, handshakeBytes, i, zeroBytes.length);
+            i = i + zeroBytes.length;
+            
+            /** Put 20-byte SHA-1 hash */
+            System.arraycopy(infoHash.array(), 0, handshakeBytes, i, infoHash.array().length);
+            i = i + infoHash.array().length;
+            
+            /** Put peer id (generated by client) */
+            System.arraycopy(localPeerID.getBytes("ASCII"), 0, handshakeBytes, i, localPeerID.getBytes("ASCII").length);
+        } 
+        catch (UnsupportedEncodingException e) 
+        {
+            System.err.println("ERROR: Could not complete handshake. ");
             e.printStackTrace();
-            System.exit(1);
         }
-        return ByteBuffer.wrap(handshake_bytes);
+        return handshakeBytes;
     }
-
-    private void sendHandshake(String localPeerID, ByteBuffer info_hash) {
+  
+    /** METHOD: Send handshake */
+    public void sendHandshake(String localPeerID, ByteBuffer info_hash) {
         try {
-            ByteBuffer handshake = buildHandshake(localPeerID, info_hash);
+            byte[] handshake = buildHandshake(localPeerID, info_hash);
             if (!connected) {
-                this.connect();
+                this.setPeerConnection();
             }
-            DataOutputStream serverOut = new DataOutputStream(peerconnection.getOutputStream());
-            serverOut.write(handshake.array());
-            serverOut.flush();
+            client2peer.write(handshake);
+            client2peer.flush();
         } catch (IOException e) {
-            System.out.println("Problem sending handshake to " + peerID);
+            System.err.println("Problem sending handshake to " + peerID);
             e.printStackTrace();
-            //System.exit(1);
         }
     }
+    
+    /** METHOD: Verify handshake */
+    public boolean verifyHandshake(ByteBuffer torrentInfoHash){
+    	/* Variables */
+    	int index = 0;
+    	byte[] trueInfoHash = torrentInfoHash.array();
+    	byte[] handshakeInfoHash = new byte[20];
+    	byte[] handshakeResponse = new byte[68];
+    	
+    	/** Read response */
+    	try
+    	{
+    		peer2client.read(handshakeResponse);
+    		/** Extract info hash from handshake response */
+        	System.arraycopy(handshakeResponse, 28, handshakeInfoHash, 0, 20);
+        	
+        	/** Verify if torrent info hash and handshake info hash are the identical */
+            while(index < 20){
+                if(handshakeInfoHash[index] != trueInfoHash[index]){
+                	return false;
+                }
+                else{
+                    ++index;
+                }
+            }
+            System.out.println("Handshake Verified");
+    	}
+    	catch(Exception e)
+    	{
+    		System.err.println("Could not read handshakeResponse. ");
+    		
+    	}
+        return true;
+    }
+    
+    /** METHOD: Close peer socket */
+    public void closePeerSocket(){
+    	try
+    	{
+    		if (peerSocket != null){
+    			peerSocket.close();
+    		}
+    	}
+    	catch (Exception e){
+    		System.err.println("ERROR: Could not close peer socket. ");
+    	}
+    }
+    
+    /* ================================================================================ */
+	/* 									Set Methods										*/  
+	/* ================================================================================ */
+    
+    /** METHOD: Create socket for peer with given IP and Port */
+    public void setPeerConnection(){
+    	try
+    	{
+    		/** Create socket */
+    		this.peerSocket = new Socket(this.peerIP, this.peerPort);
+    		if(peerSocket != null){
+    			/** store from peer to client */
+    			this.peer2client = new DataInputStream(this.peerSocket.getInputStream());
 
-     public void connect() {
-        try {
-            peerconnection = new Socket(peerIP, peerPort);
-            this.topeer = new DataOutputStream(this.peerconnection.getOutputStream());
-            this.Running = true;
-            connected = true;
-        } catch (IOException e) {
-            System.out.println(peerID + " could not connect.");
-            System.exit(1);
-        }
+    			/** store from client to peer */
+    			this.client2peer = new DataOutputStream(this.peerSocket.getOutputStream());
+        		connected = true;
+        	}
+        	else{
+        		connected = false;
+        	}
+    	}
+    	catch (Exception e)
+    	{
+    		System.err.println("ERROR: Could not create socket connection with IP: " + peerIP + " and Port: " + peerPort);
+    	}
     }
+    
+    /* ================================================================================ */
+	/* 									Get Methods										*/  
+	/* ================================================================================ */
+  
+    public String getPeerID(){
+    	return peerID;
+    }
+    
+    public String getPeerIP(){
+    	return peerIP;
+    }
+    
+    public int getPeerPort(){
+    	return peerPort;
+    }
+    
+    
+    /* ================================================================================ */
+	/* 									Is Methods										*/  
+	/* ================================================================================ */
+    
+    public boolean isPeerConnected(){
+    	return connected;
+    }
+    
 }
