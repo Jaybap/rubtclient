@@ -22,6 +22,8 @@ public class DownloadManager extends Thread {
     private ArrayList<Peer> peerList;
     private RUBTClient client;
     private boolean stillRunning;
+    private boolean completed;
+    private boolean bitset;
 
     public DownloadManager(RUBTClient r, TrackerGetr t) {
         client = r;
@@ -29,6 +31,8 @@ public class DownloadManager extends Thread {
         tracker = t;
         peerList = t.getPeerList();
         stillRunning = true;
+        completed=false;
+        
     }
 
     /**
@@ -49,9 +53,22 @@ public class DownloadManager extends Thread {
             System.err.println("ERROR: Unable to verify handshake. ");
         } else {
             
-            /*
-             * TRying to check if we receive unchoke but i dont think were getting 
+            
+            
+            /*Steps left 
+             * 1. Send interested message and then wait for response
+             * 2. After receivng reponse send unchoke message so that we may start
+             * requesting files
+             * 3. Setup a while loop that stops when boolean completed is true.
+             *      The loop contains request messages for pieces and it also sends have 
+             *      messages when a piece is completed. Also in the loop is the
+             *      output file which we must update everytime we receive a block
+             *      When loop is complete send tracker completed event response
+             * save output file to disk then close all open connections/streams
+             *    create variable bitset completed that keeps track of pieces completed
+             * Trying to check if we receive unchoke but i dont think were getting 
              * the response correct
+             * 
             */
             int length = peer.unchoke.length;
             byte[] response = peer.getPeerResponse(length);
